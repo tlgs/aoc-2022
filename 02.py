@@ -2,49 +2,39 @@ import sys
 
 
 def parse_input(puzzle_input):
-    return [tuple(line.split()) for line in puzzle_input.splitlines()]
+    return puzzle_input.splitlines()
 
 
 def part_one(strategy_guide):
-    outcome_score = {
-        ("A", "X"): 3,
-        ("A", "Y"): 6,
-        ("A", "Z"): 0,
-        ("B", "X"): 0,
-        ("B", "Y"): 3,
-        ("B", "Z"): 6,
-        ("C", "X"): 6,
-        ("C", "Y"): 0,
-        ("C", "Z"): 3,
+    score = {
+        "A X": 1 + 3,
+        "A Y": 2 + 6,
+        "A Z": 3 + 0,
+        "B X": 1 + 0,
+        "B Y": 2 + 3,
+        "B Z": 3 + 6,
+        "C X": 1 + 6,
+        "C Y": 2 + 0,
+        "C Z": 3 + 3,
     }
 
-    total = 0
-    for a, b in strategy_guide:
-        total += ord(b) - 87
-        total += outcome_score[(a, b)]
-
-    return total
+    return sum(score[line] for line in strategy_guide)
 
 
 def part_two(strategy_guide):
-    shape_score = {
-        ("A", "X"): 3,
-        ("A", "Y"): 1,
-        ("A", "Z"): 2,
-        ("B", "X"): 1,
-        ("B", "Y"): 2,
-        ("B", "Z"): 3,
-        ("C", "X"): 2,
-        ("C", "Y"): 3,
-        ("C", "Z"): 1,
+    score = {
+        "A X": 3 + 0,
+        "A Y": 1 + 3,
+        "A Z": 2 + 6,
+        "B X": 1 + 0,
+        "B Y": 2 + 3,
+        "B Z": 3 + 6,
+        "C X": 2 + 0,
+        "C Y": 3 + 3,
+        "C Z": 1 + 6,
     }
 
-    total = 0
-    for a, b in strategy_guide:
-        total += shape_score[(a, b)]
-        total += (ord(b) - 88) * 3
-
-    return total
+    return sum(score[line] for line in strategy_guide)
 
 
 class Test:
