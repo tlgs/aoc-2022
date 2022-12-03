@@ -12,8 +12,8 @@ def part_one(rucksacks):
         m = len(rucksack) // 2
         a, b = rucksack[:m], rucksack[m:]
 
-        wrong = (set(a) & set(b)).pop()
-        total += ascii_letters.index(wrong) + 1
+        item, *_ = set(a) & set(b)
+        total += ascii_letters.index(item) + 1
 
     return total
 
@@ -27,8 +27,8 @@ def part_two(rucksacks):
         except StopIteration:
             break
 
-        badge = (set(a) & set(b) & set(c)).pop()
-        total += ascii_letters.index(badge) + 1
+        item, *_ = set(a) & set(b) & set(c)
+        total += ascii_letters.index(item) + 1
 
     return total
 
