@@ -4,8 +4,9 @@ import sys
 def parse_input(puzzle_input):
     pairs = []
     for line in puzzle_input.splitlines():
-        raw_sections = (raw.split("-") for raw in line.split(","))
-        fst, snd = (tuple(map(int, range_)) for range_ in raw_sections)
+        raw_fst, raw_snd = line.split(",")
+        fst = tuple(int(x) for x in raw_fst.split("-"))
+        snd = tuple(int(x) for x in raw_snd.split("-"))
 
         pairs.append((fst, snd))
 
@@ -15,7 +16,7 @@ def parse_input(puzzle_input):
 def part_one(pairs):
     total = 0
     for (a, b), (c, d) in pairs:
-        total += (a >= c and b <= d) or (c >= a and d <= b)
+        total += (a <= c <= d <= b) or (c <= a <= b <= d)
 
     return total
 
@@ -23,10 +24,7 @@ def part_one(pairs):
 def part_two(pairs):
     total = 0
     for (a, b), (c, d) in pairs:
-        fst = range(a, b + 1)
-        snd = range(c, d + 1)
-
-        total += (a in snd) or (b in snd) or (c in fst) or (d in fst)
+        total += (a <= c <= b) or (c <= a <= d)
 
     return total
 
