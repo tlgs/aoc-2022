@@ -1,4 +1,3 @@
-import re
 import sys
 
 
@@ -6,21 +5,18 @@ def parse_input(puzzle_input):
     raw_crates, raw_procedure = puzzle_input.split("\n\n")
 
     *raw_crates, legend = raw_crates.splitlines()
-    n = int(legend.split()[-1])
+    *_, n = map(int, legend.split())
 
     stacks = [[] for _ in range(n)]
-    for raw_row in raw_crates[::-1]:
-        row = raw_row.ljust(4 * n - 1)
-        for i in range(n):
-            x = i * 4 + 1
-            if row[x] != " ":
-                stacks[i].append(row[x])
+    for row in raw_crates[::-1]:
+        for i, c in enumerate(row[1::4]):
+            if not c.isspace():
+                stacks[i].append(c)
 
     procedure = []
-    pat = re.compile(r"^move (\d+) from (\d+) to (\d+)$")
     for line in raw_procedure.splitlines():
-        m = pat.match(line)
-        procedure.append(tuple(int(x) for x in m.groups()))
+        raw = line.split()[1::2]
+        procedure.append(tuple(map(int, raw)))
 
     return stacks, procedure
 
