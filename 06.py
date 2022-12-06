@@ -1,5 +1,5 @@
-import collections
 import sys
+from collections import deque
 
 
 def parse_input(puzzle_input):
@@ -7,27 +7,21 @@ def parse_input(puzzle_input):
 
 
 def part_one(datastream):
-    queue = collections.deque(datastream[:4], maxlen=4)
-    if len(set(queue)) == 4:
-        return 4
-
-    for i, c in enumerate(datastream[4:], start=5):
+    queue = deque(maxlen=4)
+    for i, c in enumerate(datastream):
         queue.append(c)
         if len(set(queue)) == 4:
-            return i
+            return i + 1
 
     raise RuntimeError("unreachable")
 
 
 def part_two(datastream):
-    queue = collections.deque(datastream[:14], maxlen=14)
-    if len(set(queue)) == 14:
-        return 14
-
-    for i, c in enumerate(datastream[14:], start=15):
+    queue = deque(maxlen=14)
+    for i, c in enumerate(datastream):
         queue.append(c)
         if len(set(queue)) == 14:
-            return i
+            return i + 1
 
     raise RuntimeError("unreachable")
 
