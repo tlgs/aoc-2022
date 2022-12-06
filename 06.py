@@ -33,15 +33,25 @@ def part_two(datastream):
 
 
 class Test:
-    example = """\
-mjqjpqmgbljsphdztnvjfqwrcgsmlb
-"""
+    example1 = "mjqjpqmgbljsphdztnvjfqwrcgsmlb"
+    example2 = "bvwbjplbgvbhsrlpgdmjqwftvncz"
+    example3 = "nppdvjthqldpwncqszvftbrmjlhg"
+    example4 = "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"
+    example5 = "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"
 
     def test_one(self):
-        assert part_one(*parse_input(self.example)) == 7
+        assert part_one(*parse_input(self.example1)) == 7
+        assert part_one(*parse_input(self.example2)) == 5
+        assert part_one(*parse_input(self.example3)) == 6
+        assert part_one(*parse_input(self.example4)) == 10
+        assert part_one(*parse_input(self.example5)) == 11
 
     def test_two(self):
-        assert part_two(*parse_input(self.example)) == 19
+        assert part_two(*parse_input(self.example1)) == 19
+        assert part_two(*parse_input(self.example2)) == 23
+        assert part_two(*parse_input(self.example3)) == 23
+        assert part_two(*parse_input(self.example4)) == 29
+        assert part_two(*parse_input(self.example5)) == 26
 
 
 def main():
