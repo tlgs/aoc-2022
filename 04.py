@@ -10,7 +10,7 @@ def parse_input(puzzle_input):
 
         pairs.append((fst, snd))
 
-    return pairs
+    return (pairs,)
 
 
 def part_one(pairs):
@@ -40,17 +40,17 @@ class Test:
 """
 
     def test_one(self):
-        assert part_one(parse_input(self.example)) == 2
+        assert part_one(*parse_input(self.example)) == 2
 
     def test_two(self):
-        assert part_two(parse_input(self.example)) == 4
+        assert part_two(*parse_input(self.example)) == 4
 
 
 def main():
     puzzle = parse_input(sys.stdin.read())
 
-    print("part 1:", part_one(puzzle))
-    print("part 2:", part_two(puzzle))
+    print("part 1:", part_one(*puzzle))
+    print("part 2:", part_two(*puzzle))
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ from string import ascii_letters
 
 
 def parse_input(puzzle_input):
-    return puzzle_input.splitlines()
+    return (puzzle_input.splitlines(),)
 
 
 def part_one(rucksacks):
@@ -44,17 +44,17 @@ CrZsJsPPZsGzwwsLwLmpwMDw
 """
 
     def test_one(self):
-        assert part_one(parse_input(self.example)) == 157
+        assert part_one(*parse_input(self.example)) == 157
 
     def test_two(self):
-        assert part_two(parse_input(self.example)) == 70
+        assert part_two(*parse_input(self.example)) == 70
 
 
 def main():
     puzzle = parse_input(sys.stdin.read())
 
-    print("part 1:", part_one(puzzle))
-    print("part 2:", part_two(puzzle))
+    print("part 1:", part_one(*puzzle))
+    print("part 2:", part_two(*puzzle))
 
 
 if __name__ == "__main__":
