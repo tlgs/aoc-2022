@@ -10,20 +10,25 @@ def parse_input(puzzle_input):
 def part_one(grid):
     n_rows, n_cols = len(grid), len(grid[0])
 
-    visible = {
-        *product((0, n_cols - 1), range(n_rows)),
-        *product(range(n_cols), (0, n_rows - 1)),
-    }
-    for (x, y) in product(range(1, n_cols - 1), range(1, n_rows - 1)):
-        h = grid[y][x]
+    visible = set()
 
-        up = all((grid[my][x] < h for my in range(0, y)))
-        down = all((grid[my][x] < h for my in range(y + 1, n_rows)))
-        left = all((grid[y][mx] < h for mx in range(0, x)))
-        right = all((grid[y][mx] < h for mx in range(x + 1, n_cols)))
+    # up / down
+    for x in range(n_cols):
+        for traversal in [range(n_rows), range(n_rows - 1, -1, -1)]:
+            v = -1
+            for y in traversal:
+                if grid[y][x] > v:
+                    visible.add((x, y))
+                    v = grid[y][x]
 
-        if any([up, down, left, right]):
-            visible.add((x, y))
+    # left / right
+    for y in range(n_rows):
+        for traversal in [range(n_cols), range(n_cols - 1, -1, -1)]:
+            v = -1
+            for x in traversal:
+                if grid[y][x] > v:
+                    visible.add((x, y))
+                    v = grid[y][x]
 
     return len(visible)
 
