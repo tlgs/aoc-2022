@@ -4,7 +4,10 @@ from collections import defaultdict
 
 def parse_input(puzzle_input):
     lines = puzzle_input.splitlines()
-    grid = {(x, y): int(v) for y, line in enumerate(lines) for x, v in enumerate(line)}
+    grid = [[int(x) for x in line] for line in lines]
+
+    assert len(grid) == len(grid[0])  # assuming square matrix from now on
+
     return (grid, len(lines))
 
 
@@ -16,18 +19,18 @@ def part_one(grid, n):
         for traversal in [range(n), range(n - 1, -1, -1)]:
             v = -1
             for y in traversal:
-                if grid[x, y] > v:
+                if grid[y][x] > v:
                     visible.add((x, y))
-                    v = grid[x, y]
+                    v = grid[y][x]
 
     # left / right
     for y in range(n):
         for traversal in [range(n), range(n - 1, -1, -1)]:
             v = -1
             for x in traversal:
-                if grid[x, y] > v:
+                if grid[y][x] > v:
                     visible.add((x, y))
-                    v = grid[x, y]
+                    v = grid[y][x]
 
     return len(visible)
 
@@ -39,33 +42,33 @@ def part_two(grid, n):
     for x in range(n):
         stack_a, stack_b = [], []
         for ya, yb in zip(range(n), range(n - 1, -1, -1)):
-            while stack_a and stack_a[-1][1] < grid[x, ya]:
+            while stack_a and stack_a[-1][1] < grid[ya][x]:
                 stack_a.pop()
 
-            while stack_b and stack_b[-1][1] < grid[x, yb]:
+            while stack_b and stack_b[-1][1] < grid[yb][x]:
                 stack_b.pop()
 
             scores[x, ya] *= (ya - stack_a[-1][0]) if stack_a else ya
             scores[x, yb] *= (stack_b[-1][0] - yb) if stack_b else n - 1 - yb
 
-            stack_a.append((ya, grid[x, ya]))
-            stack_b.append((yb, grid[x, yb]))
+            stack_a.append((ya, grid[ya][x]))
+            stack_b.append((yb, grid[yb][x]))
 
     # left / right
     for y in range(n):
         stack_a, stack_b = [], []
         for xa, xb in zip(range(n), range(n - 1, -1, -1)):
-            while stack_a and stack_a[-1][1] < grid[xa, y]:
+            while stack_a and stack_a[-1][1] < grid[y][xa]:
                 stack_a.pop()
 
-            while stack_b and stack_b[-1][1] < grid[xb, y]:
+            while stack_b and stack_b[-1][1] < grid[y][xb]:
                 stack_b.pop()
 
             scores[xa, y] *= (xa - stack_a[-1][0]) if stack_a else xa
             scores[xb, y] *= (stack_b[-1][0] - xb) if stack_b else n - 1 - xb
 
-            stack_a.append((xa, grid[xa, y]))
-            stack_b.append((xb, grid[xb, y]))
+            stack_a.append((xa, grid[y][xa]))
+            stack_b.append((xb, grid[y][xb]))
 
     return max(scores.values())
 
