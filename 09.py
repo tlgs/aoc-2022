@@ -32,7 +32,7 @@ def parse_input(puzzle_input):
 
 
 def part_one(motions, updates):
-    tail, head = 0j, 0j
+    head = tail = 0j
     positions = {tail}
     for motion in motions:
         head += motion
@@ -48,8 +48,12 @@ def part_two(motions, updates):
     for motion in motions:
         knots[0] += motion
         for i in range(1, 10):
-            knots[i] += updates.get(knots[i - 1] - knots[i], 0)
-        positions.add(knots[-1])
+            change = updates.get(knots[i - 1] - knots[i], 0)
+            if change == 0:
+                break
+            knots[i] += change
+        else:
+            positions.add(knots[-1])
 
     return len(positions)
 
