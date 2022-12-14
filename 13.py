@@ -1,4 +1,5 @@
 import functools
+import json
 import sys
 
 
@@ -6,20 +7,22 @@ def compare(left, right):
     match left, right:
         case int(), int():
             return left - right
+
         case list(), list():
-            ...
+            for a, b in zip(left, right):
+                if result := compare(a, b):
+                    return result
+
+            return len(left) - len(right)
+
         case int(), list():
-            left = [left]
+            return compare([left], right)
+
         case list(), int():
-            right = [right]
+            return compare(left, [right])
+
         case _:
             raise ValueError
-
-    for a, b in zip(left, right):
-        if (result := compare(a, b)) != 0:
-            return result
-
-    return len(left) - len(right)
 
 
 def parse_input(puzzle_input):
@@ -27,7 +30,8 @@ def parse_input(puzzle_input):
     for raw_pair in puzzle_input.split("\n\n"):
         packets = []
         for raw_packet in raw_pair.splitlines():
-            packets.append(eval(raw_packet))  # forbidden technique
+            packet = json.loads(raw_packet)
+            packets.append(packet)
 
         result.append(tuple(packets))
 
