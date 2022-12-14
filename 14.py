@@ -22,12 +22,12 @@ def parse_input(puzzle_input):
 
 def part_one(cave):
     cave = copy.copy(cave)
-
     threshold = max(y for _, y in cave)
+
     for i in itertools.count():
         x, y = 500, 0
         while True:
-            if y == threshold:
+            if y >= threshold:
                 return i
 
             if (x, y + 1) not in cave:
@@ -45,29 +45,21 @@ def part_one(cave):
 
 def part_two(cave):
     cave = copy.copy(cave)
-
     threshold = max(y for _, y in cave) + 2
 
-    count = 0
-    while (500, 0) not in cave:
-        x, y = 500, 0
-        while True:
-            if y == threshold - 1:
-                cave.add((x, y))
-                break
-            elif (x, y + 1) not in cave:
-                y = y + 1
-            elif (x - 1, y + 1) not in cave:
-                x, y = x - 1, y + 1
-            elif (x + 1, y + 1) not in cave:
-                x, y = x + 1, y + 1
-            else:
-                cave.add((x, y))
-                break
+    def covered(x, y):
+        return (x - 1, y - 1) in cave and (x, y - 1) in cave and (x + 1, y - 1) in cave
 
-        count += 1
+    no_sand = 0
+    for y in range(threshold):
+        for x in range(500 - y, 501 + y):
+            if (x, y) not in cave and not covered(x, y):
+                continue
 
-    return count
+            cave.add((x, y))
+            no_sand += 1
+
+    return threshold**2 - no_sand
 
 
 class Test:
