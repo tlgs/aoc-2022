@@ -24,23 +24,21 @@ def part_one(cave):
     cave = copy.copy(cave)
     threshold = max(y for _, y in cave)
 
-    for i in itertools.count():
-        x, y = 500, 0
-        while True:
-            if y >= threshold:
-                return i
+    start, stack = len(cave), [(500, 0)]
+    while stack and stack[-1][1] < threshold:
+        x, y = stack[-1]
 
-            if (x, y + 1) not in cave:
-                y = y + 1
-            elif (x - 1, y + 1) not in cave:
-                x, y = x - 1, y + 1
-            elif (x + 1, y + 1) not in cave:
-                x, y = x + 1, y + 1
-            else:
-                cave.add((x, y))
-                break
+        if (x, y + 1) not in cave:
+            stack.append((x, y + 1))
+        elif (x - 1, y + 1) not in cave:
+            stack.append((x - 1, y + 1))
+        elif (x + 1, y + 1) not in cave:
+            stack.append((x + 1, y + 1))
+        else:
+            cave.add((x, y))
+            stack.pop()
 
-    raise RuntimeError("unreachable")
+    return len(cave) - start
 
 
 def part_two(cave):
