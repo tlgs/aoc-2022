@@ -2,26 +2,24 @@ import functools
 import sys
 
 
-def compare(a, b):
-    for left, right in zip(a, b):
-        match left, right:
-            case int(), int():
-                r = left - right
-            case list(), list():
-                r = compare(left, right)
-            case int(), list():
-                r = compare([left], right)
-            case list(), int():
-                r = compare(left, [right])
-            case _:
-                raise ValueError("unkown type")
+def compare(left, right):
+    match left, right:
+        case int(), int():
+            return left - right
+        case list(), list():
+            ...
+        case int(), list():
+            left = [left]
+        case list(), int():
+            right = [right]
+        case _:
+            raise ValueError
 
-        if r == 0:
-            continue
+    for a, b in zip(left, right):
+        if (result := compare(a, b)) != 0:
+            return result
 
-        return r
-
-    return len(a) - len(b)
+    return len(left) - len(right)
 
 
 def parse_input(puzzle_input):
