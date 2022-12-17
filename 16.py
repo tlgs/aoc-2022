@@ -10,15 +10,15 @@ def parse_input(puzzle_input):
         parts = line.split(maxsplit=9)
         valve = parts[1]
 
-        rate = int(parts[4][5:-1])
-        if rate > 0 or valve == "AA":
-            rates[valve] = rate
-
+        rates[valve] = int(parts[4][5:-1])
         connections[valve] = tuple(parts[-1].split(", "))
 
+    assert rates["AA"] == 0
+
     # build a distance matrix for the interesting locations, i.e. rate > 0
+    rates = {k: v for k, v in rates.items() if v}
     distances = {}
-    for start, end in itertools.combinations(rates.keys(), 2):
+    for start, end in itertools.combinations(rates.keys() | {"AA"}, 2):
         seen = {start}
         q = collections.deque([(0, start)])
         while q:
@@ -38,47 +38,40 @@ def parse_input(puzzle_input):
 
 def part_one(distances, rates):
     best = 0
-
-    assert rates["AA"] == 0
-    q = collections.deque([(0, 30, ("AA",))])
-
+    q = collections.deque([(0, 30, "AA", set())])
     while q:
-        pressure, left, opened = q.popleft()
+        pressure, left, curr, visited = q.popleft()
         best = max(pressure, best)
 
-        curr = opened[-1]
-        options = rates.keys() - set(opened)
-        for valve in options:
+        for valve in rates.keys() - visited:
             next_left = left - distances[curr, valve] - 1
             if next_left < 1:
                 continue
 
             next_pressure = pressure + rates[valve] * next_left
-            q.append((next_pressure, next_left, (*opened, valve)))
+
+            t = (next_pressure, next_left, valve, visited | {valve})
+            q.append(t)
 
     return best
 
 
 def part_two(distances, rates):
     paths = []
-
-    assert rates["AA"] == 0
-    q = collections.deque([(0, 26, ("AA",))])
-
+    q = collections.deque([(0, 26, "AA", set())])
     while q:
-        pressure, left, opened = q.popleft()
+        pressure, left, curr, visited = q.popleft()
+        paths.append((pressure, visited))
 
-        opened_set = set(opened)
-        paths.append((pressure, opened_set - {"AA"}))
-
-        curr = opened[-1]
-        for valve in rates.keys() - opened_set:
+        for valve in rates.keys() - visited:
             next_left = left - distances[curr, valve] - 1
             if next_left < 1:
                 continue
 
             next_pressure = pressure + rates[valve] * next_left
-            q.append((next_pressure, next_left, (*opened, valve)))
+
+            t = (next_pressure, next_left, valve, visited | {valve})
+            q.append(t)
 
     paths.sort(reverse=True)
 
