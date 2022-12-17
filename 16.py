@@ -81,6 +81,7 @@ def part_two(distances, rates):
             q.append((next_pressure, next_left, (*opened, valve)))
 
     paths.sort(reverse=True)
+
     best = 0
     for i, (pa, va) in enumerate(paths, start=1):
         if pa * 2 < best:
@@ -92,6 +93,7 @@ def part_two(distances, rates):
                     break
             else:
                 best = max(best, pa + pb)
+                break
 
     return best
 
