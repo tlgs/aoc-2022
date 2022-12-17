@@ -77,14 +77,14 @@ def part_two(distances, rates):
 
     best = 0
     for i, (pa, va) in enumerate(paths, start=1):
-        if pa * 2 < best:
+        if pa * 2 <= best:
             break
 
         for pb, vb in paths[i:]:
-            for valve in va:
-                if valve in vb:
-                    break
-            else:
+            if pa + pb <= best:
+                break
+
+            if not va & vb:
                 best = max(best, pa + pb)
                 break
 
