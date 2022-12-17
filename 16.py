@@ -39,10 +39,9 @@ def parse_input(puzzle_input):
 def part_one(distances, rates):
     best = 0
 
-    # assuming AA starts out being open, with a flow rate of 0;
-    # this doesn't match the problem description but changes nothing
-    # for the example and actual puzzle input
+    assert rates["AA"] == 0
     q = collections.deque([(0, 30, ("AA",))])
+
     while q:
         pressure, left, opened = q.popleft()
         best = max(pressure, best)
@@ -61,33 +60,38 @@ def part_one(distances, rates):
 
 
 def part_two(distances, rates):
-    best = 0
+    paths = []
 
-    # assuming AA starts out being open, with a flow rate of 0;
-    # this doesn't match the problem description but changes nothing
-    # for the example and actual puzzle input
-    q = collections.deque([(0, (26, 26), ("AA", "AA"))])
+    assert rates["AA"] == 0
+    q = collections.deque([(0, 26, ("AA",))])
+
     while q:
-        pressure, (left_a, left_b), opened = q.popleft()
-        best = max(pressure, best)
+        pressure, left, opened = q.popleft()
 
-        *_, curr_a, curr_b = opened
-        options = rates.keys() - set(opened)
-        for valve_a, valve_b in itertools.permutations(options, 2):
-            next_left_a = left_a - distances[curr_a, valve_a] - 1
-            if next_left_a < 1:
+        opened_set = set(opened)
+        paths.append((pressure, opened_set - {"AA"}))
+
+        curr = opened[-1]
+        for valve in rates.keys() - opened_set:
+            next_left = left - distances[curr, valve] - 1
+            if next_left < 1:
                 continue
 
-            next_left_b = left_b - distances[curr_b, valve_b] - 1
-            if next_left_b < 1:
-                continue
+            next_pressure = pressure + rates[valve] * next_left
+            q.append((next_pressure, next_left, (*opened, valve)))
 
-            next_pressure = (
-                pressure + rates[valve_a] * next_left_a + rates[valve_b] * next_left_b
-            )
-            q.append(
-                (next_pressure, (next_left_a, next_left_b), (*opened, valve_a, valve_b))
-            )
+    paths.sort(reverse=True)
+    best = 0
+    for i, (pa, va) in enumerate(paths, start=1):
+        if pa * 2 < best:
+            break
+
+        for pb, vb in paths[i:]:
+            for valve in va:
+                if valve in vb:
+                    break
+            else:
+                best = max(best, pa + pb)
 
     return best
 
