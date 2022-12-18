@@ -3,7 +3,7 @@ from collections import deque
 
 
 def parse_input(puzzle_input):
-    return (puzzle_input,)
+    return (puzzle_input.rstrip(),)
 
 
 def part_one(datastream):
