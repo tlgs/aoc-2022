@@ -2,9 +2,11 @@ import sys
 
 
 def parse_input(puzzle_input):
-    inventories = [
-        [int(x) for x in raw.splitlines()] for raw in puzzle_input.split("\n\n")
-    ]
+    inventories = []
+    for part in puzzle_input.split("\n\n"):
+        items = [int(x) for x in part.splitlines()]
+        inventories.append(items)
+
     return (inventories,)
 
 
@@ -13,7 +15,8 @@ def part_one(inventories):
 
 
 def part_two(inventories):
-    return sum(sorted(sum(i) for i in inventories)[-3:])
+    *_, a, b, c = sorted(sum(i) for i in inventories)
+    return a + b + c
 
 
 class Test:
