@@ -57,11 +57,11 @@ def part_one(distances, rates):
 
 
 def part_two(distances, rates):
-    paths = []
-    q = collections.deque([(0, 26, "AA", set())])
+    paths = collections.defaultdict(int)
+    q = collections.deque([(0, 26, "AA", frozenset())])
     while q:
         pressure, left, curr, visited = q.popleft()
-        paths.append((pressure, visited))
+        paths[visited] = max(pressure, paths[visited])
 
         for valve in rates.keys() - visited:
             next_left = left - distances[curr, valve] - 1
@@ -70,9 +70,10 @@ def part_two(distances, rates):
 
             next_pressure = pressure + rates[valve] * next_left
 
-            t = (next_pressure, next_left, valve, visited | {valve})
+            t = (next_pressure, next_left, valve, frozenset(visited | {valve}))
             q.append(t)
 
+    paths = [(v, k) for k, v in paths.items()]
     paths.sort(reverse=True)
 
     best = 0
